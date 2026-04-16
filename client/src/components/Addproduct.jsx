@@ -1,58 +1,62 @@
-import React,{useState} from 'react'
-import API from '../api/axios'
-import {useNavigate} from 'react-router-dom'
-export default function Addproduct() {
-    const [formData,setFormData]=useState({
-        name:"",price:0,description:"",image:""
-    })
-    const navigate=useNavigate()
-    function handleChange(e){
-        setFormData((prev)=>({
-            ...prev,
-            [e.target.name]:e.target.value
-        }))
-    }
-    function handleAddProduct(e){
-        e.preventDefault()
-        API.post("/product/add",formData)
-            .then((res)=>{
-                if(res.status==201){
-                    alert("Product added successfully")
-                    navigate("/") 
-                }
+import React, { useState } from "react";
+import API from "../api/axios";
+
+export default function AddProduct() {
+
+    const [form, setForm] = useState({
+        name: "",
+        price: "",
+        image: "",
+        description: ""
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        API.post("/product/add", {
+            ...form,
+            price: Number(form.price) // 🔥 FIX
+        })
+            .then(() => {
+                alert("Product added successfully");
             })
-            .catch(err=>{
-                if(err?.response?.data.message){
-                    console.log(err)
-                }
-            })
+            .catch(err => {
+                console.log(err);
+                alert(err.response?.data?.message || "Error adding product");
+            });
     }
-  return (
-    <div className='container'>
-        <div className='row'>
-            <form onSubmit={handleAddProduct}>
-                <div className="mb-3">
-                    <h2>Product</h2>
-                </div>
-               <div className="mb-3">
-                    <label htmlFor="" className="form-label">Name</label>
-                    <input type="text" name="name" className="form-control"  placeholder='Enter Name' onChange={handleChange} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="" className="form-label">Price</label>
-                    <input type="text" name="price" className="form-control"  placeholder='Enter Price' onChange={handleChange} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="" className="form-label">Description</label>
-                    <input type="text" name="description" className="form-control"  placeholder='Enter description' onChange={handleChange} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="" className="form-label">Image URL</label>
-                    <input type="text" name='image' className="form-control"  placeholder='Enter image url' onChange={handleChange} />
-                </div>
-                <button className='btn btn-warning'>Add Product</button>
+
+    return (
+        <div className="container">
+            <h2>Add Product</h2>
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    placeholder="Name"
+                    onChange={e => setForm({...form, name: e.target.value})}
+                />
+                <br/><br/>
+
+                <input
+                    placeholder="Price (numbers only)"
+                    onChange={e => setForm({...form, price: e.target.value})}
+                />
+                <br/><br/>
+
+                <input
+                    placeholder="Image"
+                    onChange={e => setForm({...form, image: e.target.value})}
+                />
+                <br/><br/>
+
+                <input
+                    placeholder="Description"
+                    onChange={e => setForm({...form, description: e.target.value})}
+                />
+                <br/><br/>
+
+                <button>Add Product</button>
             </form>
         </div>
-    </div>
-  )
+    );
 }

@@ -1,30 +1,25 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import API from '../api/axios'
+import React from "react";
+
 export default function Navbar() {
-  const navigate = useNavigate()
-  const token = localStorage.getItem("token")
-  function handleLogout() {
-    alert("Logged out successfully")
-    localStorage.removeItem("token")
-    navigate("/login")
-  }
-  return (
-    <nav className='navbar navbar-dark bg-dark px-3'>
-      <Link className='navbar-brand' to="/">Home</Link>
-      {
-        token ? (
-          <>
-            <Link className='nav-item' to="/add-product">Add Product</Link>
-            <Link className='nav-item' onClick={handleLogout}>Logout</Link>
-          </>
-        ) : (
-          <>
-            <Link className='nav-item' to="/login">Login</Link>
-            <Link className='nav-item' to="/register">Register</Link>
-          </>
-        )
-      }
-    </nav>
-  )
+
+    const token = localStorage.getItem("token");
+
+    let role = null;
+
+    if (token) {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        role = payload.role;
+    }
+
+    return (
+        <div>
+            <a href="/">Home</a> | 
+            <a href="/login">Login</a> | 
+            <a href="/register">Register</a>
+
+            {role === "admin" && (
+                <> | <a href="/add-product">Add Product</a></>
+            )}
+        </div>
+    );
 }
