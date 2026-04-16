@@ -1,16 +1,16 @@
-import React from 'react'
-import {BrowserRouter,Routes,Route} from 'react-router-dom'
-import Navbar from './components/Navbar'
-import Register from './components/Register'
-import Login from './components/Login'
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Login from './components/Login';
+import Register from './components/Register';
+
 export default function App() {
   return (
     <BrowserRouter>
-    <Navbar/>
       <Routes>
-        <Route path="/login" element={<Login/>}/>
-        <Route path='/register' element={<Register/>}/>
+        <Route path="/" element={<h1>Home</h1>} /> {/* ✅ fix warning */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
