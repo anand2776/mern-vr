@@ -9,19 +9,21 @@ const cartRoutes = require("./routes/cartRoutes");
 
 const app = express();
 
-// ✅ Middlewares
 app.use(cors());
 app.use(express.json());
 
-// ✅ Routes
+// Routes
 app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
-app.use("/cart", cartRoutes); // 🔥 IMPORTANT
+app.use("/cart", cartRoutes); // 🔥 YOU MISSED THIS EARLIER
 
-// ✅ MongoDB
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("DB connected"))
-    .catch(err => console.log(err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("DB connected"))
+  .catch((err) => console.log(err));
 
-// ✅ Server
-app.listen(5000, () => console.log("Server running on port 5000"));
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
