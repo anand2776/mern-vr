@@ -5,29 +5,23 @@ require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/productRoutes");
+const cartRoutes = require("./routes/cartRoutes");
 
 const app = express();
-
 
 // ✅ Middlewares
 app.use(cors());
 app.use(express.json());
 
-
 // ✅ Routes
 app.use("/auth", authRoutes);
-app.use("/product", productRoutes); // VERY IMPORTANT
+app.use("/product", productRoutes);
+app.use("/cart", cartRoutes); // 🔥 IMPORTANT
 
-
-// ✅ MongoDB connection
+// ✅ MongoDB
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log("DB connected"))
-    .catch(err => console.log("DB error:", err));
+    .catch(err => console.log(err));
 
-
-// ✅ Server start
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// ✅ Server
+app.listen(5000, () => console.log("Server running on port 5000"));
