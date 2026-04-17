@@ -12,18 +12,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
+// ROUTES
 app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
-app.use("/cart", cartRoutes); // 🔥 YOU MISSED THIS EARLIER
+app.use("/cart", cartRoutes); // ❗ YOU MISSED THIS EARLIER
 
-mongoose
-  .connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("DB connected"))
-  .catch((err) => console.log(err));
+  .catch(err => console.log(err));
 
-const PORT = process.env.PORT || 5000;
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(5000, () => {
+  console.log("Server running on port 5000");
 });
