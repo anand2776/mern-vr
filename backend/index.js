@@ -9,18 +9,33 @@ const cartRoutes = require("./routes/cartRoutes");
 
 const app = express();
 
-app.use(cors());
+// ✅ CORS FIX (VERY IMPORTANT)
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://mern-vr-frontend-42cp5axl2-anand2776s-projects.vercel.app",
+    ],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+
+// ✅ SERVE IMAGES (IMPORTANT)
+app.use(express.static("public"));
 
 // ROUTES
 app.use("/auth", authRoutes);
 app.use("/product", productRoutes);
-app.use("/cart", cartRoutes); // ❗ YOU MISSED THIS EARLIER
+app.use("/cart", cartRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
+// DB CONNECT
+mongoose
+  .connect(process.env.MONGO_URI)
   .then(() => console.log("DB connected"))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
-});
+// SERVER
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log("Server running on port", PORT));

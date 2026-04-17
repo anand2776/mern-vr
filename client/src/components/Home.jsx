@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/api";
 import "./Home.css";
 
 function Home() {
@@ -10,18 +10,18 @@ function Home() {
   // ✅ Fetch products
   const fetchProducts = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/product");
+      const res = await api.get("/product");
       setProducts(res.data);
     } catch (err) {
-      console.log(err);
+      console.log("Fetch error:", err);
     }
   };
 
   // ✅ Add to cart
   const addToCart = async (productId) => {
     try {
-      await axios.post(
-        "http://localhost:5000/cart/add",
+      await api.post(
+        "/cart/add",
         { productId },
         {
           headers: {
@@ -32,7 +32,7 @@ function Home() {
 
       alert("Added to cart");
     } catch (err) {
-      console.log(err);
+      console.log("Cart error:", err);
       alert("Error adding to cart");
     }
   };
@@ -49,13 +49,14 @@ function Home() {
         {products.map((p) => (
           <div className="product-card" key={p._id}>
             
-            {/* 🔥 IMAGE FIX HERE */}
-            <img src={`/${p.image}`} alt={p.name} />
+            {/* ✅ IMPORTANT: IMAGE PATH FIX */}
+            <img
+              src={`https://mern-vr-1nlm.onrender.com/${p.image}`}
+              alt={p.name}
+            />
 
             <h3>{p.name}</h3>
-
             <p className="price">₹{p.price}</p>
-
             <p className="desc">{p.description}</p>
 
             <button onClick={() => addToCart(p._id)}>
