@@ -1,20 +1,42 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Login from './components/Login';
-import Register from './components/Register';
-import Home from './components/Home';
-import AddProduct from './components/AddProduct';
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Home from "./components/Home";
+import AddProduct from "./components/Addproduct";
+import ProtectedRoute from "./components/protectedRoute";
 
-export default function App() {
+function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
+
+        {/* 🔓 Public routes */}
+        <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/add-product" element={<AddProduct />} />
+
+        {/* 🔒 Protected routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/add-product"
+          element={
+            <ProtectedRoute>
+              <AddProduct />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
 }
+
+export default App;

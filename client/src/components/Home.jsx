@@ -1,27 +1,71 @@
-import React, { useEffect, useState } from "react";
-import API from "../api/axios";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import "./Home.css";
 
-export default function Home() {
+function Home() {
+  const [products, setProducts] = useState([]);
 
-    const [products, setProducts] = useState([]);
+  const token = localStorage.getItem("token");
 
-    useEffect(() => {
-        API.get("/product")
-            .then(res => setProducts(res.data))
-            .catch(err => console.log(err));
-    }, []);
+  // ✅ Fetch products
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/product");
+      setProducts(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    return (
-        <div className="container">
-            <h2>Products</h2>
+  // ✅ Add to cart
+  const addToCart = async (productId) => {
+    try {
+      await axios.post(
+        "http://localhost:5000/cart/add",
+        { productId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-            {products.map((p) => (
-                <div key={p._id} style={{border:"1px solid black", margin:"10px", padding:"10px"}}>
-                    <h4>{p.name}</h4>
-                    <p>₹{p.price}</p>
-                    <p>{p.description}</p>
-                </div>
-            ))}
-        </div>
-    );
+      alert("Added to cart");
+    } catch (err) {
+      console.log(err);
+      alert("Error adding to cart");
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  return (
+    <div className="home">
+      <h1 className="title">Products</h1>
+
+      <div className="products-container">
+        {products.map((p) => (
+          <div className="product-card" key={p._id}>
+            
+            {/* 🔥 IMAGE FIX HERE */}
+            <img src={`/${p.image}`} alt={p.name} />
+
+            <h3>{p.name}</h3>
+
+            <p className="price">₹{p.price}</p>
+
+            <p className="desc">{p.description}</p>
+
+            <button onClick={() => addToCart(p._id)}>
+              Add to Cart
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
+
+export default Home;
